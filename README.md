@@ -1,4 +1,4 @@
-Applicant Tracking System (ATS)
+### Applicant Tracking System (ATS)
 
 A full-stack Applicant Tracking System (ATS) built to manage job postings, candidate applications, and recruitment workflows.
 This project is developed as a portfolio-grade system following clean architecture and industry best practices.
