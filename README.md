@@ -1,9 +1,9 @@
-📌 Applicant Tracking System (ATS)
+Applicant Tracking System (ATS)
 
-A full-stack Applicant Tracking System (ATS) designed to manage job postings, candidate applications, and recruitment workflows.
-This project is built as a portfolio-grade system following clean architecture and industry best practices.
+A full-stack Applicant Tracking System (ATS) built to manage job postings, candidate applications, and recruitment workflows.
+This project is developed as a portfolio-grade system following clean architecture and industry best practices.
 
-🚀 Project Overview
+Project Overview
 
 The Applicant Tracking System allows:
 
@@ -15,119 +15,83 @@ Administrators to manage users and oversee the system
 
 Secure backend APIs with role-based access control
 
-A modern frontend for interacting with the system
+A modern frontend interface for system interaction
 
-This project is being developed incrementally, following a real-world software engineering workflow.
+The project is being developed incrementally, following real-world software engineering workflows.
 
-🏗️ Project Structure
-application-tracking-system/
-├── ats-system/              # Spring Boot backend
-│   ├── src/main/java
-│   ├── src/main/resources
-│   └── pom.xml
-│
-├── ats-frontend/            # React (Vite) frontend
-│   ├── src/
-│   ├── public/
-│   └── package.json
-│
-└── README.md
 
-🧰 Tech Stack
-Backend
 
-Java 17
+---
 
-Spring Boot 4
+## Tech Stack
 
-Spring Data JPA
+### Backend
+- Java 17
+- Spring Boot
+- Spring Data JPA
+- Spring Security (JWT planned)
+- MySQL
+- Hibernate
 
-Spring Security (JWT – planned)
+### Frontend
+- React
+- Vite
+- JavaScript (ES6+)
+- HTML5
+- CSS3
 
-MySQL
+### Tools
+- Git & GitHub
+- MySQL Workbench
+- Postman
 
-Hibernate 7
+---
 
-Frontend
+## Database Design
 
-React
+The database schema is designed using MySQL Workbench with proper normalization and foreign key constraints.
 
-Vite
+### Core Tables
+- users
+- jobs
+- applications
+- resumes
 
-JavaScript (ES6+)
+### Relationships
+- One recruiter can create multiple jobs
+- One candidate can apply for multiple jobs
+- One job can receive multiple applications
+- One application is associated with one resume
 
-HTML5 / CSS3
+---
 
-Tools
+## Setup Instructions
 
-Git & GitHub
+### Prerequisites
+- Java 17 or higher
+- Node.js 18 or higher
+- MySQL 8 or higher
+- Git
 
-MySQL Workbench
+---
 
-Postman
 
-🗄️ Database Design
+## Backend Setup
 
-The database is designed using MySQL Workbench (EER Diagram) with proper normalization and foreign key constraints.
-
-Core Entities
-
-users
-
-jobs
-
-applications
-
-resumes
-
-Key Relationships
-
-A recruiter (user) can create many jobs
-
-A candidate (user) can apply to many jobs
-
-A job can have many applications
-
-Each application can have one resume
-
-🔐 Authentication & Authorization (Planned)
-
-JWT-based authentication
-
-Role-based access control:
-
-ADMIN
-
-RECRUITER
-
-CANDIDATE
-
-⚙️ Setup Instructions
-Prerequisites
-
-Java 17+
-
-Node.js 18+
-
-MySQL 8+
-
-Git
-
-Backend Setup
 cd ats-system
 ./mvnw spring-boot:run
 
-
 Backend runs on:
-
 http://localhost:8080
 
-Frontend Setup
+## Frontend Setup
+
 cd ats-frontend
 npm install
 npm run dev
 
-
 Frontend runs on:
-
 http://localhost:5173
+
+### Backend Setup
+
