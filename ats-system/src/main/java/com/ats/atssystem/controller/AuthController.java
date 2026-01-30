@@ -28,4 +28,9 @@ public class AuthController {
         String token = authService.login(request);
         return ResponseEntity.ok(new AuthResponse(token));
     }
+
+    @GetMapping("/test")
+    public String test() {
+        return "JWT works";
+    }
 }
