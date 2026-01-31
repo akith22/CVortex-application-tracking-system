@@ -222,7 +222,7 @@ const styles = {
   modalActions: {
     display: "flex",
     justifyContent: "flex-end",
-    gap: "0.75rem",
+    gap: "0.85rem",
     marginTop: "1rem",
   },
 };
