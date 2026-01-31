@@ -6,6 +6,8 @@ import Register from "./pages/register";
 import CandidateDashboard from "./pages/CandidateDashboard";
 import RecruiterDashboard from "./pages/RecruiterDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 
 function App() {
   return (
@@ -14,10 +16,32 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
-      {/* Dashboards */}
-      <Route path="/candidate/dashboard" element={<CandidateDashboard />} />
-      <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
-      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+     <Route
+  path="/admin/dashboard"
+  element={
+    <ProtectedRoute allowedRoles={["ADMIN"]}>
+      <AdminDashboard />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/recruiter/dashboard"
+  element={
+    <ProtectedRoute allowedRoles={["RECRUITER"]}>
+      <RecruiterDashboard />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/candidate/dashboard"
+  element={
+    <ProtectedRoute allowedRoles={["CANDIDATE"]}>
+      <CandidateDashboard />
+    </ProtectedRoute>
+  }
+/>
 
       {/* Default */}
       <Route path="/" element={<Navigate to="/login" replace />} />

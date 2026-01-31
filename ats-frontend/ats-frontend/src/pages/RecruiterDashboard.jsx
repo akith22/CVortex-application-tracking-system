@@ -1,20 +1,52 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
+import { useNavigate } from "react-router-dom";
 
 export default function RecruiterDashboard() {
-  const [activeTab, setActiveTab] = useState("jobs");
+  const navigate = useNavigate();
 
+  const [activeTab, setActiveTab] = useState("jobs");
   const [jobs, setJobs] = useState([]);
   const [applications, setApplications] = useState([]);
 
+  const [profile, setProfile] = useState(null);
+  const [showProfile, setShowProfile] = useState(false);
+  const [editName, setEditName] = useState("");
+
+  /* ================= FETCH PROFILE ================= */
   useEffect(() => {
-    // api.get("/recruiter/jobs")
-    // api.get("/recruiter/applications")
+    api.get("/recruiter/profile")
+      .then((res) => {
+        setProfile(res.data);
+        setEditName(res.data.name);
+      })
+      .catch(() => {
+        logout(); // token invalid / expired
+      });
   }, []);
+
+  /* ================= UPDATE NAME ================= */
+  const updateName = async () => {
+    try {
+      await api.put("/recruiter/profile", { name: editName });
+      setProfile({ ...profile, name: editName });
+      setShowProfile(false);
+    } catch {
+      alert("Failed to update name");
+    }
+  };
+
+  /* ================= LOGOUT ================= */
+  const logout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
+  if (!profile) return null;
 
   return (
     <div style={styles.page}>
-      {/* Sidebar */}
+      {/* ================= SIDEBAR ================= */}
       <aside style={styles.sidebar}>
         <h2 style={styles.logo}>CVortex</h2>
 
@@ -29,19 +61,28 @@ export default function RecruiterDashboard() {
             Applications
           </button>
         </nav>
+
+        {/* ===== Bottom Area ===== */}
+        <div style={styles.sidebarBottom}>
+          <button style={styles.profileBtn} onClick={() => setShowProfile(true)}>
+            {profile.name}
+          </button>
+          <button style={styles.logoutBtn} onClick={logout}>
+            Logout
+          </button>
+        </div>
       </aside>
 
-      {/* Main */}
+      {/* ================= MAIN ================= */}
       <main style={styles.main}>
         <header style={styles.header}>
-          <h1>Recruiter Dashboard</h1>
-          <p>Manage job postings and candidates</p>
+          <h1>Welcome, {profile.name} </h1>
+          <h2>Recruiter Dashboard</h2>
         </header>
 
         {activeTab === "jobs" && (
           <section style={styles.card}>
             <h3>My Job Posts</h3>
-
             {jobs.length === 0 ? (
               <p style={styles.empty}>No job posts created yet</p>
             ) : (
@@ -58,7 +99,6 @@ export default function RecruiterDashboard() {
         {activeTab === "applications" && (
           <section style={styles.card}>
             <h3>Candidate Applications</h3>
-
             {applications.length === 0 ? (
               <p style={styles.empty}>No applications received</p>
             ) : (
@@ -76,11 +116,39 @@ export default function RecruiterDashboard() {
           </section>
         )}
       </main>
+
+      {/* ================= PROFILE MODAL ================= */}
+      {showProfile && (
+        <div style={styles.overlay}>
+          <div style={styles.modal}>
+            <h3>My Profile</h3>
+
+            <label>Name</label>
+            <input
+              style={styles.input}
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+            />
+
+            <label>Email</label>
+            <input style={styles.input} value={profile.email} disabled />
+
+            <div style={styles.modalActions}>
+              <button style={styles.secondaryBtn} onClick={() => setShowProfile(false)}>
+                Cancel
+              </button>
+              <button style={styles.primaryBtn} onClick={updateName}>
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
-/* ================= STYLES (same as Candidate) ================= */
+/* ================= STYLES ================= */
 
 const styles = {
   page: {
@@ -94,15 +162,41 @@ const styles = {
     background: "#1e40af",
     color: "#fff",
     padding: "2rem 1.5rem",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
   },
   logo: {
-    marginBottom: "2rem",
     fontSize: "1.6rem",
+    marginBottom: "2rem",
   },
   nav: {
     display: "flex",
     flexDirection: "column",
     gap: "0.75rem",
+  },
+  sidebarBottom: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.75rem",
+  },
+  profileBtn: {
+    background: "#2563eb",
+    color: "#fff",
+    border: "none",
+    padding: "0.6rem",
+    borderRadius: "0.5rem",
+    cursor: "pointer",
+    fontWeight: 600,
+  },
+  logoutBtn: {
+    background: "#dc2626",
+    color: "#fff",
+    border: "none",
+    padding: "0.6rem",
+    borderRadius: "0.5rem",
+    cursor: "pointer",
+    fontWeight: 600,
   },
   main: {
     flex: 1,
@@ -132,6 +226,13 @@ const styles = {
     cursor: "pointer",
     fontWeight: 600,
   },
+  secondaryBtn: {
+    background: "#e5e7eb",
+    border: "none",
+    padding: "0.6rem 1.2rem",
+    borderRadius: "0.5rem",
+    cursor: "pointer",
+  },
   empty: {
     color: "#6b7280",
     marginTop: "1rem",
@@ -139,6 +240,36 @@ const styles = {
   select: {
     padding: "0.4rem",
     borderRadius: "0.4rem",
+  },
+
+  /* ===== Modal ===== */
+  overlay: {
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0,0,0,0.4)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modal: {
+    background: "#fff",
+    padding: "2rem",
+    borderRadius: "0.75rem",
+    width: "400px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.75rem",
+  },
+  input: {
+    padding: "0.5rem",
+    borderRadius: "0.4rem",
+    border: "1px solid #d1d5db",
+  },
+  modalActions: {
+    display: "flex",
+    justifyContent: "flex-end",
+    gap: "0.75rem",
+    marginTop: "1rem",
   },
 };
 
