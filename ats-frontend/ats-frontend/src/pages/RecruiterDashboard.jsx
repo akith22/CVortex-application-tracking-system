@@ -1,127 +1,179 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
+import RecruiterLayout from "../components/RecruiterLayout";
 
 export default function RecruiterDashboard() {
-  const [activeTab, setActiveTab] = useState("jobs");
-
   const [jobs, setJobs] = useState([]);
-  const [applications, setApplications] = useState([]);
+  const [profile, setProfile] = useState(null);
 
+  const [showProfile, setShowProfile] = useState(false);
+  const [showPostModal, setShowPostModal] = useState(false);
+
+  const [editName, setEditName] = useState("");
+  const [newJob, setNewJob] = useState({
+    title: "",
+    location: "",
+    type: "",
+    description: "",
+  });
+
+  /* ================= FETCH DATA ================= */
   useEffect(() => {
-    // api.get("/recruiter/jobs")
-    // api.get("/recruiter/applications")
+    api.get("/recruiter/profile")
+      .then((res) => {
+        setProfile(res.data);
+        setEditName(res.data.name);
+      })
+      .catch(() => {
+        console.error("Failed to load profile");
+      });
+
+    api.get("/recruiter/jobs")
+      .then((res) => setJobs(res.data))
+      .catch(() => {
+        console.error("Failed to load jobs");
+      });
   }, []);
 
+  /* ================= ACTIONS ================= */
+  const updateName = async () => {
+    await api.put("/recruiter/profile", { name: editName });
+    setProfile({ ...profile, name: editName });
+    setShowProfile(false);
+  };
+
+  const postJob = async () => {
+    await api.post("/recruiter/jobs", newJob);
+    setShowPostModal(false);
+    setNewJob({ title: "", location: "", type: "", description: "" });
+
+    const res = await api.get("/recruiter/jobs");
+    setJobs(res.data);
+  };
+
+  /* ✅ CRITICAL FIX */
+  if (!profile) {
+    return (
+      <div style={{ padding: "2rem", fontFamily: "Inter, sans-serif" }}>
+        Loading recruiter dashboard...
+      </div>
+    );
+  }
+
   return (
-    <div style={styles.page}>
-      {/* Sidebar */}
-      <aside style={styles.sidebar}>
-        <h2 style={styles.logo}>CVortex</h2>
+    <RecruiterLayout
+      profile={profile}
+      showProfile={showProfile}
+      setShowProfile={setShowProfile}
+      editName={editName}
+      setEditName={setEditName}
+      updateName={updateName}
+    >
+      {/* ================= TOP BAR ================= */}
+      <div style={styles.topBar}>
+        <div>
+          <h1>Welcome back, {profile.name}</h1>
+          <p style={styles.subText}>Recruiter Dashboard</p>
+        </div>
 
-        <nav style={styles.nav}>
-          <button style={navBtn(activeTab === "jobs")} onClick={() => setActiveTab("jobs")}>
-            Job Posts
-          </button>
+        <div style={{ display: "flex", gap: "0.75rem" }}>
           <button
-            style={navBtn(activeTab === "applications")}
-            onClick={() => setActiveTab("applications")}
+            style={styles.primaryBtn}
+            onClick={() => setShowPostModal(true)}
           >
-            Applications
+            + Post a Vacancy
           </button>
-        </nav>
-      </aside>
+        </div>
+      </div>
 
-      {/* Main */}
-      <main style={styles.main}>
-        <header style={styles.header}>
-          <h1>Recruiter Dashboard</h1>
-          <p>Manage job postings and candidates</p>
-        </header>
+      {/* ================= STATS ================= */}
+      <section style={styles.stats}>
+        <div style={styles.statCard}>
+          <h3>{jobs.length}</h3>
+          <p>Total Job Vacancies</p>
+        </div>
+      </section>
 
-        {activeTab === "jobs" && (
-          <section style={styles.card}>
-            <h3>My Job Posts</h3>
+      {/* Profile modal is now handled in RecruiterLayout */}
 
-            {jobs.length === 0 ? (
-              <p style={styles.empty}>No job posts created yet</p>
-            ) : (
-              jobs.map((job) => (
-                <div key={job.id} style={styles.row}>
-                  <span>{job.title}</span>
-                  <button style={styles.primaryBtn}>View</button>
-                </div>
-              ))
-            )}
-          </section>
-        )}
+      {/* ================= POST JOB MODAL ================= */}
+      {showPostModal && (
+        <Modal title="Post a Vacancy">
+          <input
+            style={styles.input}
+            placeholder="Job Title"
+            onChange={(e) =>
+              setNewJob({ ...newJob, title: e.target.value })
+            }
+          />
+          <input
+            style={styles.input}
+            placeholder="Location"
+            onChange={(e) =>
+              setNewJob({ ...newJob, location: e.target.value })
+            }
+          />
+          <input
+            style={styles.input}
+            placeholder="Job Type"
+            onChange={(e) =>
+              setNewJob({ ...newJob, type: e.target.value })
+            }
+          />
+          <textarea
+            style={styles.textarea}
+            placeholder="Description"
+            onChange={(e) =>
+              setNewJob({ ...newJob, description: e.target.value })
+            }
+          />
 
-        {activeTab === "applications" && (
-          <section style={styles.card}>
-            <h3>Candidate Applications</h3>
+          <div style={styles.modalActions}>
+            <button
+              style={styles.secondaryBtn}
+              onClick={() => setShowPostModal(false)}
+            >
+              Cancel
+            </button>
+            <button style={styles.primaryBtn} onClick={postJob}>
+              Post
+            </button>
+          </div>
+        </Modal>
+      )}
+    </RecruiterLayout>
+  );
+}
 
-            {applications.length === 0 ? (
-              <p style={styles.empty}>No applications received</p>
-            ) : (
-              applications.map((app) => (
-                <div key={app.id} style={styles.row}>
-                  <span>{app.candidateName}</span>
-                  <select style={styles.select}>
-                    <option>Applied</option>
-                    <option>Shortlisted</option>
-                    <option>Rejected</option>
-                  </select>
-                </div>
-              ))
-            )}
-          </section>
-        )}
-      </main>
+/* ================= MODAL ================= */
+function Modal({ title, children }) {
+  return (
+    <div style={styles.overlay}>
+      <div style={styles.modal}>
+        <h3>{title}</h3>
+        {children}
+      </div>
     </div>
   );
 }
 
-/* ================= STYLES (same as Candidate) ================= */
+/* ================= STYLES ================= */
 
 const styles = {
-  page: {
-    display: "flex",
-    minHeight: "100vh",
-    fontFamily: "Inter, sans-serif",
-    background: "#f9fafb",
-  },
-  sidebar: {
-    width: "260px",
-    background: "#1e40af",
-    color: "#fff",
-    padding: "2rem 1.5rem",
-  },
-  logo: {
-    marginBottom: "2rem",
-    fontSize: "1.6rem",
-  },
-  nav: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "0.75rem",
-  },
-  main: {
-    flex: 1,
-    padding: "2.5rem",
-  },
-  header: {
-    marginBottom: "2rem",
-  },
-  card: {
-    background: "#fff",
-    borderRadius: "0.75rem",
-    padding: "1.75rem",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
-  },
-  row: {
+  topBar: {
     display: "flex",
     justifyContent: "space-between",
-    padding: "1rem 0",
-    borderBottom: "1px solid #e5e7eb",
+    alignItems: "center",
+    marginBottom: "2rem",
+  },
+  subText: { color: "#6b7280" },
+  stats: { display: "flex", gap: "1rem" },
+  statCard: {
+    background: "#fff",
+    padding: "1.5rem",
+    borderRadius: "0.75rem",
+    width: 240,
+    boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
   },
   primaryBtn: {
     background: "#2563eb",
@@ -132,22 +184,45 @@ const styles = {
     cursor: "pointer",
     fontWeight: 600,
   },
-  empty: {
-    color: "#6b7280",
+  secondaryBtn: {
+    background: "#e5e7eb",
+    border: "none",
+    padding: "0.6rem 1.2rem",
+    borderRadius: "0.5rem",
+    cursor: "pointer",
+  },
+  overlay: {
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0,0,0,0.45)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modal: {
+    background: "#fff",
+    padding: "2rem",
+    borderRadius: "0.75rem",
+    width: 420,
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.75rem",
+  },
+  input: {
+    padding: "0.5rem",
+    borderRadius: "0.4rem",
+    border: "1px solid #d1d5db",
+  },
+  textarea: {
+    minHeight: 80,
+    padding: "0.5rem",
+    borderRadius: "0.4rem",
+    border: "1px solid #d1d5db",
+  },
+  modalActions: {
+    display: "flex",
+    justifyContent: "flex-end",
+    gap: "0.75rem",
     marginTop: "1rem",
   },
-  select: {
-    padding: "0.4rem",
-    borderRadius: "0.4rem",
-  },
 };
-
-const navBtn = (active) => ({
-  background: active ? "#2563eb" : "transparent",
-  color: "#fff",
-  border: "none",
-  textAlign: "left",
-  padding: "0.7rem 1rem",
-  borderRadius: "0.5rem",
-  cursor: "pointer",
-});

@@ -28,10 +28,10 @@ public class JobServiceImpl implements JobService {
     @PreAuthorize("hasRole('RECRUITER')")
     public Job createJob(Job job) {
 
-        String email =
-                SecurityContextHolder.getContext()
-                        .getAuthentication()
-                        .getName();
+        String email = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
 
         User recruiter = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Recruiter not found"));
@@ -46,10 +46,10 @@ public class JobServiceImpl implements JobService {
     @PreAuthorize("hasRole('RECRUITER')")
     public List<Job> getMyJobs() {
 
-        String email =
-                SecurityContextHolder.getContext()
-                        .getAuthentication()
-                        .getName();
+        String email = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
 
         User recruiter = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Recruiter not found"));
@@ -59,12 +59,25 @@ public class JobServiceImpl implements JobService {
 
     @Override
     @PreAuthorize("hasRole('RECRUITER')")
-    public void closeJob(Long jobId) {
+    public void updateJobStatus(Long jobId, JobStatus status) {
+
+        String email = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+
+        User recruiter = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Recruiter not found"));
 
         Job job = jobRepository.findById(jobId)
                 .orElseThrow(() -> new RuntimeException("Job not found"));
 
-        job.setStatus(JobStatus.CLOSED);
+        // 🔒 Ownership check
+        if (!job.getRecruiter().getUserId().equals(recruiter.getUserId())) {
+            throw new RuntimeException("Access denied");
+        }
+
+        job.setStatus(status);
         jobRepository.save(job);
     }
 }
