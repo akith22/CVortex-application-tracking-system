@@ -1,6 +1,7 @@
 package com.ats.atssystem.controller;
 
 import com.ats.atssystem.model.Job;
+import com.ats.atssystem.model.JobStatus;
 import com.ats.atssystem.service.JobService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +29,13 @@ public class RecruiterJobController {
         return jobService.getMyJobs();
     }
 
-    @PutMapping("/{jobId}/close")
-    public void closeJob(@PathVariable Long jobId) {
-        jobService.closeJob(jobId);
+    @PutMapping("/{jobId}/status")
+    @PreAuthorize("hasRole('RECRUITER')")
+    public void updateJobStatus(
+            @PathVariable Long jobId,
+            @RequestParam JobStatus status
+    ) {
+        jobService.updateJobStatus(jobId, status);
     }
+
 }
