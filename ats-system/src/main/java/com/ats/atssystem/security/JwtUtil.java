@@ -5,6 +5,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -13,29 +14,34 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    // MUST be at least 32 characters for HS256
-    private static final String SECRET =
-            "ats-secret-key-very-secure-32-characters-long";
+    // CRITICAL: Load from environment variables, NOT hardcoded
+    @Value("${jwt.secret}")
+    private String SECRET;
 
-    private static final long EXPIRATION =
-            1000 * 60 * 60 * 24; // 24 hours
+    @Value("${jwt.expiration:86400000}") // Default 24 hours in milliseconds
+    private long EXPIRATION;
 
-    private final SecretKey key =
-            Keys.hmacShaKeyFor(SECRET.getBytes());
+    private SecretKey getKey() {
+        // Validate secret is long enough for HS256 (minimum 32 characters)
+        if (SECRET == null || SECRET.length() < 32) {
+            throw new IllegalStateException(
+                    "JWT secret must be at least 32 characters. " +
+                            "Set 'jwt.secret' property in application.properties or environment variables"
+            );
+        }
+        return Keys.hmacShaKeyFor(SECRET.getBytes());
+    }
 
     // =========================
     // TOKEN GENERATION
     // =========================
     public String generateToken(String email, String role) {
-
         return Jwts.builder()
                 .setSubject(email)
-                .claim("role", role) // IMPORTANT: add role
+                .claim("role", role)
                 .setIssuedAt(new Date())
-                .setExpiration(
-                        new Date(System.currentTimeMillis() + EXPIRATION)
-                )
-                .signWith(key, SignatureAlgorithm.HS256)
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
+                .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -66,9 +72,8 @@ public class JwtUtil {
     // INTERNAL
     // =========================
     private Claims getClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
+        return Jwts.parser()
+                .setSigningKey(getKey())
                 .parseClaimsJws(token)
                 .getBody();
     }
