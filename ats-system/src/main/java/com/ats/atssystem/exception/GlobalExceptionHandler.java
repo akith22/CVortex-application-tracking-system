@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +36,40 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
+    // ========== NEW: Job-related Exception Handlers ==========
+
+    /**
+     * Handle JobNotFoundException
+     * Returns 404 NOT FOUND when job doesn't exist
+     */
+    @ExceptionHandler(JobNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleJobNotFoundException(JobNotFoundException ex) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("timestamp", LocalDateTime.now());
+        errorResponse.put("status", HttpStatus.NOT_FOUND.value());
+        errorResponse.put("error", "Not Found");
+        errorResponse.put("message", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    /**
+     * Handle JobNotAvailableException
+     * Returns 403 FORBIDDEN when trying to access CLOSED jobs
+     */
+    @ExceptionHandler(JobNotAvailableException.class)
+    public ResponseEntity<Map<String, Object>> handleJobNotAvailableException(JobNotAvailableException ex) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("timestamp", LocalDateTime.now());
+        errorResponse.put("status", HttpStatus.FORBIDDEN.value());
+        errorResponse.put("error", "Forbidden");
+        errorResponse.put("message", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+    }
+
+    // ========== END: New Exception Handlers ==========
 
     /**
      * Handle generic runtime exceptions (e.g., "Email already exists")
