@@ -4,6 +4,7 @@ import com.ats.atssystem.dto.AuthResponse;
 import com.ats.atssystem.dto.LoginRequest;
 import com.ats.atssystem.dto.RegisterRequest;
 import com.ats.atssystem.service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,13 +19,13 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
         authService.register(request);
         return ResponseEntity.ok("User registered successfully");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         String token = authService.login(request);
         return ResponseEntity.ok(new AuthResponse(token));
     }

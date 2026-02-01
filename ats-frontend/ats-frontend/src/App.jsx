@@ -4,50 +4,25 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 
 import CandidateDashboard from "./pages/CandidateDashboard";
+import CandidateJobs from "./pages/CandidateJobs";
+import CandidateApplications from "./pages/CandidateApplications";
+import CandidateResume from "./pages/CandidateResume";
+
 import RecruiterDashboard from "./pages/RecruiterDashboard";
-import AdminDashboard from "./pages/AdminDashboard";
 import RecruiterJobs from "./pages/RecruiterJobs";
+
+import AdminDashboard from "./pages/AdminDashboard";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <Routes>
-      {/* Auth */}
+      {/* ================= AUTH ================= */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
-      {/* Admin */}
-      <Route
-        path="/admin/dashboard"
-        element={
-          <ProtectedRoute allowedRoles={["ADMIN"]}>
-            <AdminDashboard />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* ✅ RECRUITER DASHBOARD (MISSING BEFORE) */}
-      <Route
-        path="/recruiter/dashboard"
-        element={
-          <ProtectedRoute allowedRoles={["RECRUITER"]}>
-            <RecruiterDashboard />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* Recruiter Jobs */}
-      <Route
-        path="/recruiter/jobs"
-        element={
-          <ProtectedRoute allowedRoles={["RECRUITER"]}>
-            <RecruiterJobs />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* Candidate */}
+      {/* ================= CANDIDATE ROUTES ================= */}
       <Route
         path="/candidate/dashboard"
         element={
@@ -57,8 +32,65 @@ function App() {
         }
       />
 
-      {/* Default */}
+      <Route
+        path="/candidate/jobs"
+        element={
+          <ProtectedRoute allowedRoles={["CANDIDATE"]}>
+            <CandidateJobs />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/candidate/applications"
+        element={
+          <ProtectedRoute allowedRoles={["CANDIDATE"]}>
+            <CandidateApplications />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/candidate/resume"
+        element={
+          <ProtectedRoute allowedRoles={["CANDIDATE"]}>
+            <CandidateResume />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* ================= RECRUITER ROUTES ================= */}
+      <Route
+        path="/recruiter/dashboard"
+        element={
+          <ProtectedRoute allowedRoles={["RECRUITER"]}>
+            <RecruiterDashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/recruiter/jobs"
+        element={
+          <ProtectedRoute allowedRoles={["RECRUITER"]}>
+            <RecruiterJobs />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* ================= ADMIN ROUTES ================= */}
+      <Route
+        path="/admin/dashboard"
+        element={
+          <ProtectedRoute allowedRoles={["ADMIN"]}>
+            <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* ================= DEFAULT ================= */}
       <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }

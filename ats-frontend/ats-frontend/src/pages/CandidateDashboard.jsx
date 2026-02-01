@@ -1,202 +1,478 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
+import CandidateLayout from "../components/CandidateLayout";
 
 export default function CandidateDashboard() {
-  const [activeTab, setActiveTab] = useState("jobs");
-  const [resume, setResume] = useState(null);
+  const navigate = useNavigate();
+  const [profile, setProfile] = useState(null);
+  const [editName, setEditName] = useState("");
+  const [showProfile, setShowProfile] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  // API-ready placeholders (NO mock data)
-  const [jobs, setJobs] = useState([]);
-  const [applications, setApplications] = useState([]);
-
+  /* ================= FETCH PROFILE ON MOUNT ================= */
   useEffect(() => {
-    // Backend integration later
-    // api.get("/candidate/jobs")
-    // api.get("/candidate/applications")
+    fetchCandidateProfile();
   }, []);
 
-  const handleResumeUpload = async () => {
-    if (!resume) return alert("Please select a resume");
-
-    const formData = new FormData();
-    formData.append("resume", resume);
-
+  const fetchCandidateProfile = async () => {
     try {
-      // await api.post("/candidate/upload-resume", formData);
-      alert("Resume upload endpoint ready");
-    } catch {
-      alert("Resume upload failed");
+      setLoading(true);
+      setError("");
+
+      const res = await api.get("/candidate/profile");
+      setProfile(res.data);
+      setEditName(res.data.name);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+
+      if (err.response?.status === 401 || err.response?.status === 403) {
+        setError("Unauthorized. Please login again.");
+        setTimeout(() => navigate("/login"), 2000);
+      } else {
+        setError(err.response?.data?.message || "Failed to load profile");
+      }
     }
   };
 
+  /* ================= UPDATE PROFILE ================= */
+  const updateName = async () => {
+    try {
+      setLoading(true);
+      setError("");
+      setSuccess("");
+
+      if (!editName.trim()) {
+        setError("Name cannot be empty");
+        setLoading(false);
+        return;
+      }
+
+      const res = await api.put("/candidate/profile", {
+        name: editName,
+      });
+
+      setProfile(res.data);
+      setShowProfile(false);
+      setSuccess("Profile updated successfully!");
+
+      setTimeout(() => setSuccess(""), 3000);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+
+      if (err.response?.status === 400) {
+        setError(err.response.data?.message || "Invalid input");
+      } else if (err.response?.status === 401 || err.response?.status === 403) {
+        setError("Unauthorized. Please login again.");
+        setTimeout(() => navigate("/login"), 2000);
+      } else {
+        setError(err.response?.data?.message || "Failed to update profile");
+      }
+    }
+  };
+
+  /* ================= LOADING STATE ================= */
+  if (loading && !profile) {
+    return (
+      <div style={styles.loadingPage}>
+        <div style={styles.spinner}></div>
+        <p>Loading your dashboard...</p>
+      </div>
+    );
+  }
+
+  /* ================= RENDER ================= */
   return (
-    <div style={styles.page}>
-      {/* Sidebar */}
-      <aside style={styles.sidebar}>
-        <h2 style={styles.logo}>CVortex</h2>
-
-        <nav style={styles.nav}>
-          <button style={navBtn(activeTab === "jobs")} onClick={() => setActiveTab("jobs")}>
-            Browse Jobs
-          </button>
-          <button style={navBtn(activeTab === "applications")} onClick={() => setActiveTab("applications")}>
-            Applications
-          </button>
-          <button style={navBtn(activeTab === "resume")} onClick={() => setActiveTab("resume")}>
-            Resume
-          </button>
-        </nav>
-      </aside>
-
-      {/* Main Content */}
-      <main style={styles.main}>
-        <header style={styles.header}>
-          <h1>Candidate Dashboard</h1>
-          <p>Manage your job applications</p>
-        </header>
-
-        {/* Browse Jobs */}
-        {activeTab === "jobs" && (
-          <section style={styles.card}>
-            <h3>Open Positions</h3>
-
-            {jobs.length === 0 ? (
-              <p style={styles.empty}>No job listings available</p>
-            ) : (
-              jobs.map((job) => (
-                <div key={job.id} style={styles.jobCard}>
-                  <div>
-                    <strong>{job.title}</strong>
-                    <p>{job.company}</p>
-                  </div>
-                  <button style={styles.primaryBtn}>Apply</button>
-                </div>
-              ))
-            )}
-          </section>
-        )}
-
-        {/* Applications */}
-        {activeTab === "applications" && (
-          <section style={styles.card}>
-            <h3>My Applications</h3>
-
-            {applications.length === 0 ? (
-              <p style={styles.empty}>You haven't applied to any jobs yet</p>
-            ) : (
-              applications.map((app) => (
-                <div key={app.id} style={styles.appRow}>
-                  <span>{app.jobTitle}</span>
-                  <span style={statusBadge(app.status)}>{app.status}</span>
-                </div>
-              ))
-            )}
-          </section>
-        )}
-
-        {/* Resume */}
-        {activeTab === "resume" && (
-          <section style={styles.card}>
-            <h3>Upload Resume</h3>
-
-            <input
-              type="file"
-              accept=".pdf,.doc,.docx"
-              onChange={(e) => setResume(e.target.files[0])}
-              style={styles.file}
+    <CandidateLayout
+      profile={profile}
+      showProfile={showProfile}
+      setShowProfile={setShowProfile}
+      editName={editName}
+      setEditName={setEditName}
+      updateName={updateName}
+    >
+      {/* ================= ALERTS ================= */}
+      {error && (
+        <div style={styles.alertError}>
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 8v4m0 4v.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
+          </svg>
+          <div>
+            <p style={styles.alertTitle}>Error</p>
+            <p style={styles.alertMessage}>{error}</p>
+          </div>
+        </div>
+      )}
 
-            <button style={styles.primaryBtn} onClick={handleResumeUpload}>
-              Upload Resume
+      {success && (
+        <div style={styles.alertSuccess}>
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+          <div>
+            <p style={styles.alertTitle}>Success</p>
+            <p style={styles.alertMessage}>{success}</p>
+          </div>
+        </div>
+      )}
+
+      {/* ================= HEADER ================= */}
+      <div style={styles.header}>
+        <div>
+          <h1>Welcome back, {profile?.name}</h1>
+          <p style={styles.subtitle}>Candidate Dashboard</p>
+        </div>
+      </div>
+
+      {/* ================= QUICK STATS ================= */}
+      <div style={styles.statsGrid}>
+        <div style={styles.statCard}>
+          <div style={styles.statIcon}>📋</div>
+          <div>
+            <p style={styles.statLabel}>Applications</p>
+            <p style={styles.statValue}>0</p>
+          </div>
+        </div>
+
+        <div style={styles.statCard}>
+          <div style={styles.statIcon}>⭐</div>
+          <div>
+            <p style={styles.statLabel}>Saved Jobs</p>
+            <p style={styles.statValue}>0</p>
+          </div>
+        </div>
+
+        <div style={styles.statCard}>
+          <div style={styles.statIcon}>📄</div>
+          <div>
+            <p style={styles.statLabel}>Resume Status</p>
+            <p style={styles.statValue}>Pending</p>
+          </div>
+        </div>
+      </div>
+
+      {/* ================= PROFILE CARD ================= */}
+      {profile && (
+        <div style={styles.card}>
+          <div style={styles.cardHeader}>
+            <h2>Your Profile</h2>
+            <button
+              style={styles.editBtn}
+              onClick={() => setShowProfile(true)}
+            >
+              Edit Profile
             </button>
-          </section>
-        )}
-      </main>
-    </div>
+          </div>
+
+          <div style={styles.profileInfo}>
+            <div style={styles.infoGroup}>
+              <label style={styles.infoLabel}>Full Name</label>
+              <p style={styles.infoValue}>{profile.name}</p>
+            </div>
+
+            <div style={styles.infoGroup}>
+              <label style={styles.infoLabel}>Email</label>
+              <p style={styles.infoValue}>{profile.email}</p>
+            </div>
+
+            <div style={styles.infoGroup}>
+              <label style={styles.infoLabel}>Role</label>
+              <p style={{ ...styles.infoValue, ...styles.roleBadge }}>
+                {profile.role}
+              </p>
+            </div>
+
+            <div style={styles.infoGroup}>
+              <label style={styles.infoLabel}>Member Since</label>
+              <p style={styles.infoValue}>
+                {new Date(profile.createdAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ================= GETTING STARTED ================= */}
+      <div style={styles.card}>
+        <h2>Getting Started</h2>
+        <div style={styles.checklist}>
+          <div style={styles.checkItem}>
+            <span style={styles.checkIcon}>✓</span>
+            <div>
+              <p style={styles.checkTitle}>Complete Your Profile</p>
+              <p style={styles.checkDescription}>You're on track!</p>
+            </div>
+          </div>
+
+          <div style={styles.checkItem}>
+            <span style={styles.checkIcon}>⭘</span>
+            <div>
+              <p style={styles.checkTitle}>Upload Your Resume</p>
+              <p style={styles.checkDescription}>
+                Add your resume to apply for jobs
+              </p>
+            </div>
+          </div>
+
+          <div style={styles.checkItem}>
+            <span style={styles.checkIcon}>⭘</span>
+            <div>
+              <p style={styles.checkTitle}>Browse Jobs</p>
+              <p style={styles.checkDescription}>
+                Find and apply to job positions
+              </p>
+            </div>
+          </div>
+
+          <div style={styles.checkItem}>
+            <span style={styles.checkIcon}>⭘</span>
+            <div>
+              <p style={styles.checkTitle}>Track Applications</p>
+              <p style={styles.checkDescription}>
+                Monitor your application status
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </CandidateLayout>
   );
 }
 
-/* ===================== STYLES ===================== */
-
+/* ================= STYLES ================= */
 const styles = {
-  page: {
-    display: "flex",
-    minHeight: "100vh",
-    fontFamily: "Inter, sans-serif",
-    background: "#f9fafb",
-  },
-  sidebar: {
-    width: "260px",
-    background: "#1e40af",
-    color: "#fff",
-    padding: "2rem 1.5rem",
-  },
-  logo: {
-    marginBottom: "2rem",
-    fontSize: "1.6rem",
-  },
-  nav: {
+  loadingPage: {
     display: "flex",
     flexDirection: "column",
-    gap: "0.75rem",
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: "100vh",
+    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    color: "#fff",
+    fontFamily: "Inter, sans-serif",
+    gap: "20px",
   },
-  main: {
-    flex: 1,
-    padding: "2.5rem",
+
+  spinner: {
+    width: "50px",
+    height: "50px",
+    border: "4px solid rgba(255,255,255,0.3)",
+    borderTop: "4px solid white",
+    borderRadius: "50%",
+    animation: "spin 1s linear infinite",
   },
+
+  /* ===== ALERTS ===== */
+  alertError: {
+    display: "flex",
+    gap: "12px",
+    padding: "16px",
+    background: "#fee",
+    border: "1px solid #fcc",
+    borderRadius: "8px",
+    marginBottom: "24px",
+    color: "#c00",
+    alignItems: "flex-start",
+  },
+
+  alertSuccess: {
+    display: "flex",
+    gap: "12px",
+    padding: "16px",
+    background: "#efe",
+    border: "1px solid #cfc",
+    borderRadius: "8px",
+    marginBottom: "24px",
+    color: "#060",
+    alignItems: "flex-start",
+  },
+
+  alertTitle: {
+    fontWeight: 600,
+    margin: "0 0 4px 0",
+  },
+
+  alertMessage: {
+    margin: 0,
+    fontSize: "14px",
+  },
+
+  /* ===== HEADER ===== */
   header: {
     marginBottom: "2rem",
   },
+
+  header: {
+    marginBottom: "2rem",
+  },
+
+  subtitle: {
+    color: "#6b7280",
+    marginTop: "0.5rem",
+  },
+
+  /* ===== STATS GRID ===== */
+  statsGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+    gap: "20px",
+    marginBottom: "2rem",
+  },
+
+  statCard: {
+    background: "#fff",
+    padding: "1.5rem",
+    borderRadius: "12px",
+    display: "flex",
+    gap: "16px",
+    boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+    alignItems: "center",
+  },
+
+  statIcon: {
+    fontSize: "40px",
+    width: "60px",
+    height: "60px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: "12px",
+    background: "#f3f4f6",
+  },
+
+  statLabel: {
+    margin: 0,
+    color: "#6b7280",
+    fontSize: "12px",
+    fontWeight: 600,
+    textTransform: "uppercase",
+    letterSpacing: "0.5px",
+  },
+
+  statValue: {
+    margin: "8px 0 0 0",
+    fontSize: "28px",
+    fontWeight: 700,
+    color: "#1f2937",
+  },
+
+  /* ===== CARDS ===== */
   card: {
     background: "#fff",
-    borderRadius: "0.75rem",
-    padding: "1.75rem",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+    borderRadius: "12px",
+    padding: "2rem",
+    marginBottom: "2rem",
+    boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
   },
-  jobCard: {
+
+  cardHeader: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "1rem",
+    marginBottom: "2rem",
+    paddingBottom: "1rem",
     borderBottom: "1px solid #e5e7eb",
   },
-  appRow: {
-    display: "flex",
-    justifyContent: "space-between",
-    padding: "1rem 0",
-    borderBottom: "1px solid #e5e7eb",
-  },
-  primaryBtn: {
-    background: "#2563eb",
+
+  editBtn: {
+    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
     color: "#fff",
     border: "none",
-    padding: "0.6rem 1.2rem",
-    borderRadius: "0.5rem",
+    padding: "0.75rem 1.5rem",
+    borderRadius: "6px",
     cursor: "pointer",
     fontWeight: 600,
+    transition: "all 0.3s",
   },
-  empty: {
+
+  /* ===== PROFILE INFO ===== */
+  profileInfo: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+    gap: "2rem",
+  },
+
+  infoGroup: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.5rem",
+  },
+
+  infoLabel: {
+    fontSize: "12px",
+    fontWeight: 600,
     color: "#6b7280",
-    marginTop: "1rem",
+    textTransform: "uppercase",
+    letterSpacing: "0.5px",
   },
-  file: {
-    margin: "1rem 0",
+
+  infoValue: {
+    margin: 0,
+    fontSize: "16px",
+    color: "#1f2937",
+    fontWeight: 500,
+  },
+
+  roleBadge: {
+    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    color: "#fff",
+    padding: "0.5rem 1rem",
+    borderRadius: "20px",
+    width: "fit-content",
+    fontSize: "14px",
+  },
+
+  /* ===== CHECKLIST ===== */
+  checklist: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
+  },
+
+  checkItem: {
+    display: "flex",
+    gap: "16px",
+    alignItems: "flex-start",
+    padding: "1rem",
+    borderRadius: "8px",
+    background: "#f9fafb",
+    border: "1px solid #e5e7eb",
+  },
+
+  checkIcon: {
+    fontSize: "24px",
+    fontWeight: "bold",
+    color: "#667eea",
+    width: "30px",
+    textAlign: "center",
+  },
+
+  checkTitle: {
+    margin: 0,
+    fontWeight: 600,
+    color: "#1f2937",
+    fontSize: "15px",
+  },
+
+  checkDescription: {
+    margin: "4px 0 0 0",
+    color: "#6b7280",
+    fontSize: "14px",
   },
 };
-
-const navBtn = (active) => ({
-  background: active ? "#2563eb" : "transparent",
-  color: "#fff",
-  border: "none",
-  textAlign: "left",
-  padding: "0.7rem 1rem",
-  borderRadius: "0.5rem",
-  cursor: "pointer",
-});
-
-const statusBadge = (status) => ({
-  padding: "0.3rem 0.7rem",
-  borderRadius: "999px",
-  background: "#e5e7eb",
-  fontSize: "0.8rem",
-});
