@@ -108,6 +108,14 @@ export default function Login() {
       <div className="auth-container login-layout">
         <div className="auth-image-section">
           <img src="/login-img.png" alt="Professional business handshake" />
+          <div className="glass-card glass-panel">
+            <h3 style={{ fontSize: "1.2rem", marginBottom: "0.5rem", fontWeight: 700 }}>
+              Trusted by Industry Leaders
+            </h3>
+            <p style={{ fontSize: "0.9rem", opacity: 0.9 }}>
+              Join 500+ companies streamlining their hiring process with CVortex.
+            </p>
+          </div>
         </div>
 
         <div className="auth-form-section">

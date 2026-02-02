@@ -553,39 +553,58 @@ function Modal({ title, children, onClose }) {
 
 /* ================= STYLES ================= */
 const styles = {
-  loadingPage: {
+  /* ===== HEADER WITH CLOCK ===== */
+  header: {
     display: "flex",
-    flexDirection: "column",
+    justifyContent: "space-between",
     alignItems: "center",
-    justifyContent: "center",
-    minHeight: "100vh",
-    background: "linear-gradient(135deg, #1e40af 0%, #2563eb 100%)",
-    color: "#fff",
-    fontFamily: "Inter, sans-serif",
-    gap: "20px",
+    marginBottom: "2rem",
+    flexWrap: "wrap",
+    gap: "1rem",
   },
 
-  spinner: {
-    width: "50px",
-    height: "50px",
-    border: "4px solid rgba(255,255,255,0.3)",
-    borderTop: "4px solid white",
-    borderRadius: "50%",
-    animation: "spin 1s linear infinite",
+  subtitle: {
+    color: "#6b7280",
+    marginTop: "0.5rem",
   },
 
-  /* ===== ALERTS ===== */
-  alertError: {
+  headerRight: {
     display: "flex",
-    gap: "12px",
-    padding: "16px",
-    background: "#fee",
-    border: "1px solid #fcc",
-    borderRadius: "8px",
-    marginBottom: "24px",
-    color: "#c00",
-    alignItems: "flex-start",
+    alignItems: "center",
+    gap: "1rem",
   },
+
+  clockCard: {
+    background: "#fff",
+    padding: "0.75rem 1.25rem",
+    borderRadius: "12px",
+    boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+    display: "flex",
+    alignItems: "center",
+    gap: "1rem",
+    border: "1px solid #e5e7eb",
+  },
+
+  clockIcon: {
+    fontSize: "24px",
+  },
+
+  clockTime: {
+    margin: 0,
+    fontSize: "18px",
+    fontWeight: 700,
+    color: "#1f2937",
+    fontFamily: "monospace",
+  },
+
+  clockDate: {
+    margin: "2px 0 0 0",
+    fontSize: "11px",
+    color: "#6b7280",
+    fontWeight: 500,
+  },
+
+  /* ===== STATS GRID ===== */
 
   alertSuccess: {
     display: "flex",

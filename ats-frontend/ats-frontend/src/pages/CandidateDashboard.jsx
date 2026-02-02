@@ -509,12 +509,13 @@ const styles = {
 
   clockCard: {
     background: "#fff",
-    padding: "1rem 1.5rem",
+    padding: "0.75rem 1.25rem",
     borderRadius: "12px",
     boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
     display: "flex",
     alignItems: "center",
     gap: "1rem",
+    border: "1px solid #e5e7eb",
   },
 
   clockIcon: {
