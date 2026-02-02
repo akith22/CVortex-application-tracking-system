@@ -442,7 +442,7 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     minHeight: "100vh",
-    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    background: "linear-gradient(135deg, #1e40af 0%, #2563eb 100%)",
     color: "#fff",
     fontFamily: "Inter, sans-serif",
     gap: "20px",
@@ -603,8 +603,8 @@ const styles = {
 
   viewAllBtn: {
     background: "transparent",
-    color: "#667eea",
-    border: "2px solid #667eea",
+    color: "#1e40af",
+    border: "2px solid #1e40af",
     padding: "0.5rem 1rem",
     borderRadius: "6px",
     cursor: "pointer",
@@ -614,7 +614,7 @@ const styles = {
   },
 
   editBtn: {
-    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    background: "linear-gradient(135deg, #1e40af 0%, #2563eb 100%)",
     color: "#fff",
     border: "none",
     padding: "0.75rem 1.5rem",
@@ -649,7 +649,7 @@ const styles = {
   },
 
   browseBtn: {
-    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    background: "linear-gradient(135deg, #1e40af 0%, #2563eb 100%)",
     color: "#fff",
     border: "none",
     padding: "0.75rem 2rem",
@@ -737,7 +737,7 @@ const styles = {
   },
 
   roleBadge: {
-    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    background: "linear-gradient(135deg, #1e40af 0%, #2563eb 100%)",
     color: "#fff",
     padding: "0.5rem 1rem",
     borderRadius: "20px",

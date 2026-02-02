@@ -400,7 +400,7 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     minHeight: "100vh",
-    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    background: "linear-gradient(135deg, #1e40af 0%, #2563eb 100%)",
     color: "#fff",
     fontFamily: "Inter, sans-serif",
     gap: "20px",
@@ -472,7 +472,7 @@ const styles = {
 
   statsText: {
     fontWeight: 600,
-    color: "#667eea",
+    color: "#1e40af",
     fontSize: "14px",
   },
 
@@ -609,7 +609,7 @@ const styles = {
 
   viewBtn: {
     width: "100%",
-    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    background: "linear-gradient(135deg, #1e40af 0%, #2563eb 100%)",
     color: "#fff",
     border: "none",
     padding: "0.75rem",
@@ -776,7 +776,7 @@ const styles = {
   },
 
   applyBtn: {
-    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    background: "linear-gradient(135deg, #1e40af 0%, #2563eb 100%)",
     color: "#fff",
     border: "none",
     padding: "0.75rem 1.5rem",
