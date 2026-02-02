@@ -88,16 +88,11 @@ body {
   /* Subtle zoom effect */
 }
 
-.auth-form-wrapper {
-  width: 100%;
-  max-width: 440px;
-  animation: fadeIn 0.8s ease-out;
-}
-
+/* Smoother Fade In */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
 
   to {
@@ -106,9 +101,51 @@ body {
   }
 }
 
+/* Floating Animation */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.auth-form-wrapper {
+  width: 100%;
+  max-width: 440px;
+  animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 .logo-wrapper {
   margin-bottom: 3rem;
-  /* text-align: center; Removed center alignment for a more modern left-aligned look or keep center strictly for auth? Let's keep distinct branding */
+  position: relative;
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+.glass-card {
+  position: absolute;
+  bottom: 2rem;
+  left: 2rem;
+  right: 2rem;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  color: white;
+  z-index: 10;
+  animation: float 6s ease-in-out infinite;
 }
 
 .logo-wrapper h1 {

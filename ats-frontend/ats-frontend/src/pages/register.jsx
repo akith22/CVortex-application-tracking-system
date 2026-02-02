@@ -221,6 +221,14 @@ export default function Register() {
         {/* Image Section (Right) */}
         <div className="auth-image-section">
           <img src="/register-img.png" alt="Professional business meeting" />
+          <div className="glass-card glass-panel">
+            <h3 style={{ fontSize: "1.2rem", marginBottom: "0.5rem", fontWeight: 700 }}>
+              Start Your Journey
+            </h3>
+            <p style={{ fontSize: "0.9rem", opacity: 0.9 }}>
+              Create an account today and connect with top talent or find your dream job.
+            </p>
+          </div>
         </div>
       </div>
     </>

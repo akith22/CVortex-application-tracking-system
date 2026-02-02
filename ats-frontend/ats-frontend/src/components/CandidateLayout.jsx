@@ -98,6 +98,10 @@ const styles = {
     flexDirection: "column",
     justifyContent: "space-between",
     boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
+    position: "sticky",
+    top: 0,
+    height: "100vh",
+    alignSelf: "flex-start",
   },
   logo: {
     fontSize: "1.7rem",
