@@ -103,6 +103,17 @@ export default function CandidateJobs() {
     }
   };
 
+  /* ================= APPLY FOR JOB - REDIRECT TO APPLICATIONS PAGE ================= */
+  const handleApplyClick = () => {
+    // Navigate to applications page with the selected job data
+    navigate("/candidate/applications", {
+      state: {
+        applyToJob: selectedJob,
+        candidateInfo: profile,
+      },
+    });
+  };
+
   /* ================= LOADING STATE ================= */
   if (loading && !profile) {
     return (
@@ -112,16 +123,18 @@ export default function CandidateJobs() {
       </div>
     );
   }
-/* ================= FILTER JOBS BY SEARCH ================= */
-const filteredJobs = jobs.filter((job) => {
-  const searchLower = searchQuery.toLowerCase();
-  return (
-    job.title.toLowerCase().includes(searchLower) ||
-    job.location.toLowerCase().includes(searchLower) ||
-    job.recruiterName.toLowerCase().includes(searchLower) ||
-    (job.description && job.description.toLowerCase().includes(searchLower))
-  );
-});
+
+  /* ================= FILTER JOBS BY SEARCH ================= */
+  const filteredJobs = jobs.filter((job) => {
+    const searchLower = searchQuery.toLowerCase();
+    return (
+      job.title.toLowerCase().includes(searchLower) ||
+      job.location.toLowerCase().includes(searchLower) ||
+      job.recruiterName.toLowerCase().includes(searchLower) ||
+      (job.description && job.description.toLowerCase().includes(searchLower))
+    );
+  });
+
   /* ================= RENDER ================= */
   return (
     <CandidateLayout
@@ -178,73 +191,72 @@ const filteredJobs = jobs.filter((job) => {
       )}
 
       {/* ================= HEADER ================= */}
-<div style={styles.header}>
-  <div>
-    <h1>Browse Jobs</h1>
-    <p style={styles.subtitle}>Find and apply to job positions</p>
-  </div>
-  <div style={styles.statsInfo}>
-    <span style={styles.statsText}>
-      {jobs.length} {jobs.length === 1 ? "Job" : "Jobs"} Available
-    </span>
-  </div>
-</div>
+      <div style={styles.header}>
+        <div>
+          <h1>Browse Jobs</h1>
+          <p style={styles.subtitle}>Find and apply to job positions</p>
+        </div>
+        <div style={styles.statsInfo}>
+          <span style={styles.statsText}>
+            {jobs.length} {jobs.length === 1 ? "Job" : "Jobs"} Available
+          </span>
+        </div>
+      </div>
 
-{/* ================= SEARCH BAR ================= */}
-<div style={styles.searchContainer}>
-  <div style={styles.searchWrapper}>
-    <svg
-      style={styles.searchIcon}
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-      />
-    </svg>
-    <input
-      type="text"
-      placeholder="Search by job title, location, or recruiter..."
-      value={searchQuery}
-      onChange={(e) => setSearchQuery(e.target.value)}
-      style={styles.searchInput}
-    />
-    {searchQuery && (
-      <button
-        style={styles.clearBtn}
-        onClick={() => setSearchQuery("")}
-      >
-        ×
-      </button>
-    )}
-  </div>
-  {searchQuery && (
-    <p style={styles.searchResults}>
-      Found {filteredJobs.length} {filteredJobs.length === 1 ? "job" : "jobs"} matching "{searchQuery}"
-    </p>
-  )}
-</div>
+      {/* ================= SEARCH BAR ================= */}
+      <div style={styles.searchContainer}>
+        <div style={styles.searchWrapper}>
+          <svg
+            style={styles.searchIcon}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+          <input
+            type="text"
+            placeholder="Search by job title, location, or recruiter..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={styles.searchInput}
+          />
+          {searchQuery && (
+            <button style={styles.clearBtn} onClick={() => setSearchQuery("")}>
+              ×
+            </button>
+          )}
+        </div>
+        {searchQuery && (
+          <p style={styles.searchResults}>
+            Found {filteredJobs.length}{" "}
+            {filteredJobs.length === 1 ? "job" : "jobs"} matching "{searchQuery}
+            "
+          </p>
+        )}
+      </div>
 
       {/* ================= JOBS LIST ================= */}
-{filteredJobs.length === 0 ? (
-            <div style={styles.card}>
+      {filteredJobs.length === 0 ? (
+        <div style={styles.card}>
           <div style={styles.emptyState}>
             <div style={styles.emptyIcon}>💼</div>
             <p style={styles.emptyTitle}>No Jobs Available</p>
             <p style={styles.emptyDescription}>
-  {searchQuery
-    ? `No jobs found matching "${searchQuery}"`
-    : "Check back later for new job opportunities"}
-</p>
+              {searchQuery
+                ? `No jobs found matching "${searchQuery}"`
+                : "Check back later for new job opportunities"}
+            </p>
           </div>
         </div>
       ) : (
         <div style={styles.jobsGrid}>
-  {filteredJobs.map((job) => (
+          {filteredJobs.map((job) => (
             <div key={job.jobsId} style={styles.jobCard}>
               <div style={styles.jobHeader}>
                 <h3 style={styles.jobTitle}>{job.title}</h3>
@@ -368,7 +380,9 @@ const filteredJobs = jobs.filter((job) => {
                 >
                   Close
                 </button>
-                <button style={styles.applyBtn}>Apply Now</button>
+                <button style={styles.applyBtn} onClick={handleApplyClick}>
+                  Apply Now
+                </button>
               </div>
             </div>
           </div>
@@ -462,66 +476,64 @@ const styles = {
     fontSize: "14px",
   },
 
-
   /* ===== SEARCH BAR ===== */
-searchContainer: {
-  marginBottom: "2rem",
-},
+  searchContainer: {
+    marginBottom: "2rem",
+  },
 
-searchWrapper: {
-  position: "relative",
-  display: "flex",
-  alignItems: "center",
-  background: "#fff",
-  borderRadius: "12px",
-  boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-  border: "2px solid #e5e7eb",
-  transition: "all 0.3s",
-},
+  searchWrapper: {
+    position: "relative",
+    display: "flex",
+    alignItems: "center",
+    background: "#fff",
+    borderRadius: "12px",
+    boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+    border: "2px solid #e5e7eb",
+    transition: "all 0.3s",
+  },
 
-searchIcon: {
-  position: "absolute",
-  left: "1rem",
-  width: "20px",
-  height: "20px",
-  color: "#9ca3af",
-  pointerEvents: "none",
-},
+  searchIcon: {
+    position: "absolute",
+    left: "1rem",
+    width: "20px",
+    height: "20px",
+    color: "#9ca3af",
+    pointerEvents: "none",
+  },
 
-searchInput: {
-  width: "100%",
-  padding: "1rem 1rem 1rem 3rem",
-  border: "none",
-  borderRadius: "12px",
-  fontSize: "15px",
-  outline: "none",
-  fontFamily: "Inter, sans-serif",
-},
+  searchInput: {
+    width: "100%",
+    padding: "1rem 1rem 1rem 3rem",
+    border: "none",
+    borderRadius: "12px",
+    fontSize: "15px",
+    outline: "none",
+    fontFamily: "Inter, sans-serif",
+  },
 
-clearBtn: {
-  position: "absolute",
-  right: "1rem",
-  background: "#f3f4f6",
-  border: "none",
-  borderRadius: "50%",
-  width: "28px",
-  height: "28px",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  cursor: "pointer",
-  fontSize: "20px",
-  color: "#6b7280",
-  transition: "all 0.2s",
-},
+  clearBtn: {
+    position: "absolute",
+    right: "1rem",
+    background: "#f3f4f6",
+    border: "none",
+    borderRadius: "50%",
+    width: "28px",
+    height: "28px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+    fontSize: "20px",
+    color: "#6b7280",
+    transition: "all 0.2s",
+  },
 
-searchResults: {
-  marginTop: "0.75rem",
-  fontSize: "14px",
-  color: "#6b7280",
-  fontWeight: 500,
-},
-
+  searchResults: {
+    marginTop: "0.75rem",
+    fontSize: "14px",
+    color: "#6b7280",
+    fontWeight: 500,
+  },
 
   /* ===== JOBS GRID ===== */
   jobsGrid: {

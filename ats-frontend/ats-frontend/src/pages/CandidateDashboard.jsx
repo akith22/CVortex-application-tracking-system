@@ -6,25 +6,42 @@ import CandidateLayout from "../components/CandidateLayout";
 export default function CandidateDashboard() {
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
+  const [applications, setApplications] = useState([]);
   const [editName, setEditName] = useState("");
   const [showProfile, setShowProfile] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [currentTime, setCurrentTime] = useState(new Date());
 
-  /* ================= FETCH PROFILE ON MOUNT ================= */
+  /* ================= CLOCK UPDATE ================= */
   useEffect(() => {
-    fetchCandidateProfile();
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
   }, []);
 
-  const fetchCandidateProfile = async () => {
+  /* ================= FETCH PROFILE & APPLICATIONS ON MOUNT ================= */
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const fetchDashboardData = async () => {
     try {
       setLoading(true);
       setError("");
 
-      const res = await api.get("/candidate/profile");
-      setProfile(res.data);
-      setEditName(res.data.name);
+      // Fetch profile
+      const profileRes = await api.get("/candidate/profile");
+      setProfile(profileRes.data);
+      setEditName(profileRes.data.name);
+
+      // Fetch applications
+      const appsRes = await api.get("/candidate/applications");
+      setApplications(appsRes.data);
+
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -33,7 +50,7 @@ export default function CandidateDashboard() {
         setError("Unauthorized. Please login again.");
         setTimeout(() => navigate("/login"), 2000);
       } else {
-        setError(err.response?.data?.message || "Failed to load profile");
+        setError(err.response?.data?.message || "Failed to load dashboard data");
       }
     }
   };
@@ -75,6 +92,16 @@ export default function CandidateDashboard() {
     }
   };
 
+  /* ================= COMPUTE STATS FROM APPLICATIONS ================= */
+  const totalApplications = applications.length;
+  const pendingApplications = applications.filter(
+    (app) => app.status === "APPLIED"
+  ).length;
+  const shortlistedApplications = applications.filter(
+    (app) => app.status === "SHORTLISTED"
+  ).length;
+  const resumesUploaded = applications.filter((app) => app.resumeUploaded).length;
+
   /* ================= LOADING STATE ================= */
   if (loading && !profile) {
     return (
@@ -98,10 +125,16 @@ export default function CandidateDashboard() {
       {/* ================= ALERTS ================= */}
       {error && (
         <div style={styles.alertError}>
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            style={{ width: "24px", height: "24px" }}
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
+              strokeWidth="2"
               d="M12 8v4m0 4v.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
@@ -114,10 +147,16 @@ export default function CandidateDashboard() {
 
       {success && (
         <div style={styles.alertSuccess}>
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            style={{ width: "24px", height: "24px" }}
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
+              strokeWidth="2"
               d="M5 13l4 4L19 7"
             />
           </svg>
@@ -128,39 +167,132 @@ export default function CandidateDashboard() {
         </div>
       )}
 
-      {/* ================= HEADER ================= */}
+      {/* ================= HEADER WITH CLOCK ================= */}
       <div style={styles.header}>
         <div>
           <h1>Welcome back, {profile?.name}</h1>
           <p style={styles.subtitle}>Candidate Dashboard</p>
         </div>
+        <div style={styles.clockCard}>
+          <div style={styles.clockIcon}>🕐</div>
+          <div>
+            <p style={styles.clockTime}>
+              {currentTime.toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+              })}
+            </p>
+            <p style={styles.clockDate}>
+              {currentTime.toLocaleDateString("en-US", {
+                weekday: "long",
+                month: "short",
+                day: "numeric",
+              })}
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* ================= QUICK STATS ================= */}
+      {/* ================= QUICK STATS (REAL DATA) ================= */}
       <div style={styles.statsGrid}>
-        <div style={styles.statCard}>
-          <div style={styles.statIcon}>📋</div>
+        <div
+          style={styles.statCard}
+          onClick={() => navigate("/candidate/applications")}
+        >
+          <div style={{ ...styles.statIcon, background: "#dbeafe" }}>📋</div>
           <div>
-            <p style={styles.statLabel}>Applications</p>
-            <p style={styles.statValue}>0</p>
+            <p style={styles.statLabel}>Total Applications</p>
+            <p style={styles.statValue}>{totalApplications}</p>
+          </div>
+        </div>
+
+        <div
+          style={styles.statCard}
+          onClick={() => navigate("/candidate/applications")}
+        >
+          <div style={{ ...styles.statIcon, background: "#fef3c7" }}>⏳</div>
+          <div>
+            <p style={styles.statLabel}>Pending Review</p>
+            <p style={styles.statValue}>{pendingApplications}</p>
+          </div>
+        </div>
+
+        <div
+          style={styles.statCard}
+          onClick={() => navigate("/candidate/applications")}
+        >
+          <div style={{ ...styles.statIcon, background: "#d1fae5" }}>⭐</div>
+          <div>
+            <p style={styles.statLabel}>Shortlisted</p>
+            <p style={styles.statValue}>{shortlistedApplications}</p>
           </div>
         </div>
 
         <div style={styles.statCard}>
-          <div style={styles.statIcon}>⭐</div>
+          <div style={{ ...styles.statIcon, background: "#e0e7ff" }}>📄</div>
           <div>
-            <p style={styles.statLabel}>Saved Jobs</p>
-            <p style={styles.statValue}>0</p>
+            <p style={styles.statLabel}>Resumes Uploaded</p>
+            <p style={styles.statValue}>
+              {resumesUploaded}/{totalApplications || 0}
+            </p>
           </div>
+        </div>
+      </div>
+
+      {/* ================= RECENT APPLICATIONS ================= */}
+      <div style={styles.card}>
+        <div style={styles.cardHeader}>
+          <h2>Recent Applications</h2>
+          <button
+            style={styles.viewAllBtn}
+            onClick={() => navigate("/candidate/applications")}
+          >
+            View All
+          </button>
         </div>
 
-        <div style={styles.statCard}>
-          <div style={styles.statIcon}>📄</div>
-          <div>
-            <p style={styles.statLabel}>Resume Status</p>
-            <p style={styles.statValue}>Pending</p>
+        {applications.length === 0 ? (
+          <div style={styles.emptyState}>
+            <div style={styles.emptyIcon}>📭</div>
+            <p style={styles.emptyTitle}>No Applications Yet</p>
+            <p style={styles.emptyDescription}>
+              Start by browsing available jobs and applying to positions that
+              match your skills.
+            </p>
+            <button
+              style={styles.browseBtn}
+              onClick={() => navigate("/candidate/jobs")}
+            >
+              Browse Jobs
+            </button>
           </div>
-        </div>
+        ) : (
+          <div style={styles.recentList}>
+            {applications.slice(0, 3).map((app) => (
+              <div key={app.applicationId} style={styles.recentItem}>
+                <div style={styles.recentInfo}>
+                  <h4 style={styles.recentJobTitle}>{app.jobTitle}</h4>
+                  <p style={styles.recentMeta}>
+                    <span style={styles.recentIcon}>📍</span>
+                    {app.jobLocation} · {app.recruiterName}
+                  </p>
+                  <p style={styles.recentDate}>
+                    Applied on{" "}
+                    {new Date(app.appliedAt).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </p>
+                </div>
+                <span style={getStatusBadgeStyle(app.status)}>
+                  {app.status}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ================= PROFILE CARD ================= */}
@@ -208,51 +340,98 @@ export default function CandidateDashboard() {
         </div>
       )}
 
-      {/* ================= GETTING STARTED ================= */}
+      {/* ================= QUICK ACTIONS ================= */}
       <div style={styles.card}>
-        <h2>Getting Started</h2>
-        <div style={styles.checklist}>
-          <div style={styles.checkItem}>
-            <span style={styles.checkIcon}>✓</span>
+        <h2 style={{ marginBottom: "1.5rem" }}>Quick Actions</h2>
+        <div style={styles.actionsGrid}>
+          <button
+            style={styles.actionCard}
+            onClick={() => navigate("/candidate/jobs")}
+          >
+            <div style={styles.actionIcon}>🔍</div>
             <div>
-              <p style={styles.checkTitle}>Complete Your Profile</p>
-              <p style={styles.checkDescription}>You're on track!</p>
-            </div>
-          </div>
-
-          <div style={styles.checkItem}>
-            <span style={styles.checkIcon}>⭘</span>
-            <div>
-              <p style={styles.checkTitle}>Upload Your Resume</p>
-              <p style={styles.checkDescription}>
-                Add your resume to apply for jobs
+              <p style={styles.actionTitle}>Browse Jobs</p>
+              <p style={styles.actionDescription}>
+                Find new opportunities
               </p>
             </div>
-          </div>
+          </button>
 
-          <div style={styles.checkItem}>
-            <span style={styles.checkIcon}>⭘</span>
+          <button
+            style={styles.actionCard}
+            onClick={() => navigate("/candidate/applications")}
+          >
+            <div style={styles.actionIcon}>📊</div>
             <div>
-              <p style={styles.checkTitle}>Browse Jobs</p>
-              <p style={styles.checkDescription}>
-                Find and apply to job positions
+              <p style={styles.actionTitle}>Track Applications</p>
+              <p style={styles.actionDescription}>
+                Monitor your progress
               </p>
             </div>
-          </div>
+          </button>
 
-          <div style={styles.checkItem}>
-            <span style={styles.checkIcon}>⭘</span>
+          <button
+            style={styles.actionCard}
+            onClick={() => setShowProfile(true)}
+          >
+            <div style={styles.actionIcon}>⚙️</div>
             <div>
-              <p style={styles.checkTitle}>Track Applications</p>
-              <p style={styles.checkDescription}>
-                Monitor your application status
+              <p style={styles.actionTitle}>Update Profile</p>
+              <p style={styles.actionDescription}>
+                Keep your info current
               </p>
             </div>
-          </div>
+          </button>
         </div>
       </div>
     </CandidateLayout>
   );
+}
+
+/* ================= HELPER FUNCTIONS ================= */
+function getStatusBadgeStyle(status) {
+  const baseStyle = {
+    padding: "0.5rem 1rem",
+    borderRadius: "20px",
+    fontSize: "11px",
+    fontWeight: 700,
+    textTransform: "uppercase",
+    letterSpacing: "0.5px",
+    whiteSpace: "nowrap",
+  };
+
+  switch (status) {
+    case "APPLIED":
+      return {
+        ...baseStyle,
+        background: "#dbeafe",
+        color: "#1e40af",
+      };
+    case "SHORTLISTED":
+      return {
+        ...baseStyle,
+        background: "#d1fae5",
+        color: "#065f46",
+      };
+    case "REJECTED":
+      return {
+        ...baseStyle,
+        background: "#fee2e2",
+        color: "#991b1b",
+      };
+    case "HIRED":
+      return {
+        ...baseStyle,
+        background: "#fef3c7",
+        color: "#92400e",
+      };
+    default:
+      return {
+        ...baseStyle,
+        background: "#f3f4f6",
+        color: "#374151",
+      };
+  }
 }
 
 /* ================= STYLES ================= */
@@ -313,18 +492,48 @@ const styles = {
     fontSize: "14px",
   },
 
-  /* ===== HEADER ===== */
+  /* ===== HEADER WITH CLOCK ===== */
   header: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: "2rem",
-  },
-
-  header: {
-    marginBottom: "2rem",
+    flexWrap: "wrap",
+    gap: "1rem",
   },
 
   subtitle: {
     color: "#6b7280",
     marginTop: "0.5rem",
+  },
+
+  clockCard: {
+    background: "#fff",
+    padding: "1rem 1.5rem",
+    borderRadius: "12px",
+    boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+    display: "flex",
+    alignItems: "center",
+    gap: "1rem",
+  },
+
+  clockIcon: {
+    fontSize: "32px",
+  },
+
+  clockTime: {
+    margin: 0,
+    fontSize: "20px",
+    fontWeight: 700,
+    color: "#1f2937",
+    fontFamily: "monospace",
+  },
+
+  clockDate: {
+    margin: "4px 0 0 0",
+    fontSize: "12px",
+    color: "#6b7280",
+    fontWeight: 500,
   },
 
   /* ===== STATS GRID ===== */
@@ -343,6 +552,9 @@ const styles = {
     gap: "16px",
     boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
     alignItems: "center",
+    cursor: "pointer",
+    transition: "all 0.3s",
+    border: "2px solid transparent",
   },
 
   statIcon: {
@@ -353,7 +565,6 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     borderRadius: "12px",
-    background: "#f3f4f6",
   },
 
   statLabel: {
@@ -385,9 +596,21 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "2rem",
+    marginBottom: "1.5rem",
     paddingBottom: "1rem",
     borderBottom: "1px solid #e5e7eb",
+  },
+
+  viewAllBtn: {
+    background: "transparent",
+    color: "#667eea",
+    border: "2px solid #667eea",
+    padding: "0.5rem 1rem",
+    borderRadius: "6px",
+    cursor: "pointer",
+    fontWeight: 600,
+    fontSize: "14px",
+    transition: "all 0.3s",
   },
 
   editBtn: {
@@ -399,6 +622,90 @@ const styles = {
     cursor: "pointer",
     fontWeight: 600,
     transition: "all 0.3s",
+  },
+
+  /* ===== EMPTY STATE ===== */
+  emptyState: {
+    textAlign: "center",
+    padding: "2rem",
+  },
+
+  emptyIcon: {
+    fontSize: "64px",
+    marginBottom: "1rem",
+  },
+
+  emptyTitle: {
+    fontSize: "18px",
+    fontWeight: 700,
+    color: "#1f2937",
+    margin: "0 0 0.5rem 0",
+  },
+
+  emptyDescription: {
+    fontSize: "14px",
+    color: "#6b7280",
+    margin: "0 0 1.5rem 0",
+  },
+
+  browseBtn: {
+    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    color: "#fff",
+    border: "none",
+    padding: "0.75rem 2rem",
+    borderRadius: "6px",
+    cursor: "pointer",
+    fontWeight: 600,
+    fontSize: "14px",
+    transition: "all 0.3s",
+  },
+
+  /* ===== RECENT APPLICATIONS ===== */
+  recentList: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
+  },
+
+  recentItem: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "1rem",
+    background: "#f9fafb",
+    borderRadius: "8px",
+    border: "1px solid #e5e7eb",
+    gap: "1rem",
+  },
+
+  recentInfo: {
+    flex: 1,
+  },
+
+  recentJobTitle: {
+    margin: "0 0 0.5rem 0",
+    fontSize: "16px",
+    fontWeight: 700,
+    color: "#1f2937",
+  },
+
+  recentMeta: {
+    margin: "0 0 0.25rem 0",
+    fontSize: "13px",
+    color: "#6b7280",
+    display: "flex",
+    alignItems: "center",
+    gap: "0.5rem",
+  },
+
+  recentIcon: {
+    fontSize: "12px",
+  },
+
+  recentDate: {
+    margin: 0,
+    fontSize: "12px",
+    color: "#9ca3af",
   },
 
   /* ===== PROFILE INFO ===== */
@@ -438,41 +745,40 @@ const styles = {
     fontSize: "14px",
   },
 
-  /* ===== CHECKLIST ===== */
-  checklist: {
-    display: "flex",
-    flexDirection: "column",
+  /* ===== QUICK ACTIONS ===== */
+  actionsGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
     gap: "1rem",
   },
 
-  checkItem: {
-    display: "flex",
-    gap: "16px",
-    alignItems: "flex-start",
-    padding: "1rem",
-    borderRadius: "8px",
+  actionCard: {
     background: "#f9fafb",
-    border: "1px solid #e5e7eb",
+    border: "2px solid #e5e7eb",
+    borderRadius: "8px",
+    padding: "1.5rem",
+    display: "flex",
+    alignItems: "center",
+    gap: "1rem",
+    cursor: "pointer",
+    transition: "all 0.3s",
+    textAlign: "left",
   },
 
-  checkIcon: {
-    fontSize: "24px",
-    fontWeight: "bold",
-    color: "#667eea",
-    width: "30px",
-    textAlign: "center",
+  actionIcon: {
+    fontSize: "36px",
   },
 
-  checkTitle: {
-    margin: 0,
-    fontWeight: 600,
-    color: "#1f2937",
-    fontSize: "15px",
-  },
-
-  checkDescription: {
-    margin: "4px 0 0 0",
-    color: "#6b7280",
+  actionTitle: {
+    margin: "0 0 0.25rem 0",
     fontSize: "14px",
+    fontWeight: 700,
+    color: "#1f2937",
+  },
+
+  actionDescription: {
+    margin: 0,
+    fontSize: "12px",
+    color: "#6b7280",
   },
 };
