@@ -119,8 +119,8 @@ The database is designed using an EER diagram and includes:
 
 ### 1️⃣ Clone the Repository
 ```bash
-git clone https://github.com/akith22/CVortex.git
-cd CVortex
+git clone https://github.com/akith22/CVortex-application-tracking-system.git
+cd CVortex-aplication-tracking-system
 ```
 
 ### 2️⃣ Set Up the Database (IMPORTANT)
