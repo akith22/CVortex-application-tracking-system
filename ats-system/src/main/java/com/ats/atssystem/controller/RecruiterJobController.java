@@ -1,5 +1,6 @@
 package com.ats.atssystem.controller;
 
+import com.ats.atssystem.dto.ApplicantDTO;
 import com.ats.atssystem.model.Job;
 import com.ats.atssystem.model.JobStatus;
 import com.ats.atssystem.service.JobService;
@@ -38,4 +39,21 @@ public class RecruiterJobController {
         jobService.updateJobStatus(jobId, status);
     }
 
+    /**
+     * Get all applicants for a specific job.
+     *
+     * GET /recruiter/jobs/{jobId}/applicants
+     *
+     * Returns list of applicants with their:
+     * - Name
+     * - Email
+     * - Application status
+     * - Applied date
+     *
+     * Security: Only the job owner can view applicants
+     */
+    @GetMapping("/{jobId}/applicants")
+    public List<ApplicantDTO> getApplicantsForJob(@PathVariable Long jobId) {
+        return jobService.getApplicantsForJob(jobId);
+    }
 }

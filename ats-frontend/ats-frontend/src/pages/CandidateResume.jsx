@@ -94,7 +94,7 @@ const styles = {
     margin: "0.5rem 0",
   },
   uploadBtn: {
-    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    background: "linear-gradient(135deg, #1e40af 0%, #2563eb 100%)",
     color: "#fff",
     border: "none",
     padding: "0.75rem 1.5rem",

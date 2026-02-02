@@ -31,7 +31,9 @@ export default function RecruiterLayout({
               <button style={styles.navBtn}>Job Posts</button>
             </Link>
 
-            <button style={styles.navBtn}>Applications</button>
+            <Link to="/recruiter/applications" style={styles.link}>
+              <button style={styles.navBtn}>Applications</button>
+            </Link>
           </nav>
         </div>
 
@@ -84,48 +86,68 @@ export default function RecruiterLayout({
   );
 }
 
-/* styles only ONCE */
+/* styles with glassmorphism effect */
 const styles = {
   page: { display: "flex", minHeight: "100vh", background: "#f4f6fb" },
   sidebar: {
     width: 260,
-    background: "#1e40af",
+    background: "linear-gradient(135deg, #1e40af 0%, #2563eb 100%)",
     color: "#fff",
     padding: "2rem 1.5rem",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
+    boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
   },
-  logo: { fontSize: "1.7rem", marginBottom: "1.5rem" },
+  logo: {
+    fontSize: "1.7rem",
+    marginBottom: "1.5rem",
+    fontWeight: 700,
+    letterSpacing: "0.5px",
+  },
   nav: { display: "flex", flexDirection: "column", gap: "0.5rem" },
   navBtn: {
     width: "100%",
-    background: "transparent",
+    background: "rgba(255, 255, 255, 0.1)",
     color: "#fff",
-    border: "none",
+    border: "1px solid rgba(255, 255, 255, 0.18)",
     padding: "0.75rem 1rem",
     borderRadius: "0.5rem",
     textAlign: "left",
     cursor: "pointer",
+    backdropFilter: "blur(10px)",
+    WebkitBackdropFilter: "blur(10px)",
+    transition: "all 0.3s ease",
+    fontWeight: 500,
+    fontSize: "14px",
   },
   link: { textDecoration: "none" },
   sidebarBottom: { display: "flex", flexDirection: "column", gap: "0.75rem" },
   profileBtn: {
-    background: "#2563eb",
+    background: "rgba(255, 255, 255, 0.15)",
     color: "#fff",
-    border: "none",
-    padding: "0.6rem",
+    border: "1px solid rgba(255, 255, 255, 0.25)",
+    padding: "0.75rem",
     borderRadius: "0.5rem",
     cursor: "pointer",
     fontWeight: 600,
+    backdropFilter: "blur(10px)",
+    WebkitBackdropFilter: "blur(10px)",
+    transition: "all 0.3s ease",
+    fontSize: "14px",
   },
   logoutBtn: {
-    background: "#dc2626",
+    background: "rgba(220, 38, 38, 0.9)",
     color: "#fff",
-    border: "none",
-    padding: "0.6rem",
+    border: "1px solid rgba(255, 255, 255, 0.2)",
+    padding: "0.75rem",
     borderRadius: "0.5rem",
     cursor: "pointer",
+    fontWeight: 600,
+    backdropFilter: "blur(10px)",
+    WebkitBackdropFilter: "blur(10px)",
+    transition: "all 0.3s ease",
+    fontSize: "14px",
   },
   main: { flex: 1, padding: "2.5rem" },
   overlay: {
@@ -145,11 +167,14 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     gap: "0.75rem",
+    boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
   },
   input: {
-    padding: "0.5rem",
-    borderRadius: "0.4rem",
+    padding: "0.75rem",
+    borderRadius: "0.5rem",
     border: "1px solid #d1d5db",
+    fontSize: "14px",
+    fontFamily: "inherit",
   },
   modalActions: {
     display: "flex",
@@ -158,19 +183,24 @@ const styles = {
     marginTop: "1rem",
   },
   primaryBtn: {
-    background: "#2563eb",
+    background: "linear-gradient(135deg, #2563eb 0%, #2563eb 100%)",
     color: "#fff",
     border: "none",
-    padding: "0.6rem 1.2rem",
+    padding: "0.75rem 1.5rem",
     borderRadius: "0.5rem",
     cursor: "pointer",
     fontWeight: 600,
+    fontSize: "14px",
+    transition: "all 0.3s ease",
   },
   secondaryBtn: {
     background: "#e5e7eb",
     border: "none",
-    padding: "0.6rem 1.2rem",
+    padding: "0.75rem 1.5rem",
     borderRadius: "0.5rem",
     cursor: "pointer",
+    fontWeight: 600,
+    fontSize: "14px",
+    transition: "all 0.3s ease",
   },
 };

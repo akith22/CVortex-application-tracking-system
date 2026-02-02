@@ -15,6 +15,9 @@ import java.util.Optional;
  *
  * Phase 4 methods added:
  *   - findByCandidateUserId  → fetches all applications for the candidate dashboard
+ *
+ * Phase R3 methods added:
+ *   - findByJobJobsId  → fetches all applications for a specific job (recruiter view)
  */
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
 
@@ -52,4 +55,17 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
      * @return List of all applications by this candidate (empty list if none)
      */
     List<Application> findByCandidateUserId(Long candidateUserId);
+
+    // ============================================================
+    // Phase R3 — View Applicants per Job
+    // ============================================================
+
+    /**
+     * Fetches all applications for a specific job.
+     * Used by recruiters to view all applicants for their job postings.
+     *
+     * @param jobsId the jobsId of the job
+     * @return List of all applications for this job (empty list if none)
+     */
+    List<Application> findByJobJobsId(Long jobsId);
 }

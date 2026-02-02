@@ -91,7 +91,7 @@ const styles = {
   page: { display: "flex", minHeight: "100vh", background: "#f4f6fb" },
   sidebar: {
     width: 260,
-    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    background: "linear-gradient(135deg, #1e40af 0%, #2563eb 100%)",
     color: "#fff",
     padding: "2rem 1.5rem",
     display: "flex",
@@ -183,7 +183,7 @@ const styles = {
     marginTop: "1rem",
   },
   primaryBtn: {
-    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    background: "linear-gradient(135deg, #2563eb 0%, #2563eb 100%)",
     color: "#fff",
     border: "none",
     padding: "0.75rem 1.5rem",
