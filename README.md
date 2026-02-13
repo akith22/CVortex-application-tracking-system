@@ -220,6 +220,10 @@ Sri Lanka Institute of Information Technology (SLIIT)
 
 🐙 GitHub: [@akith22](https://github.com/akith22)
 
+**Theertha Dheemani**  
+Computer Science Undergraduate  
+Sri Lanka Institute of Information Technology (SLIIT)
+
 ---
 
 
