@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c69427e0-e91d-45b4-960a-cb4e4e608189" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;it23614062&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/akith22/CVortex-application-tracking-system.git&quot;,
+    &quot;accountId&quot;: &quot;39659129-efef-4346-84ab-f7e4052c8124&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="399XvenwnbcQQhDBChY6ZRsqE1N" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JUnit.AtsSystemApplicationTests.executor": "Run",
+    "JUnit.AuthControllerTest.accessSecuredEndpoint_withoutToken_shouldReturn401.executor": "Run",
+    "JUnit.AuthControllerTest.accessSecuredEndpoint_withoutToken_shouldReturn403.executor": "Run",
+    "JUnit.AuthControllerTest.loginWithInvalidEmail_shouldFail.executor": "Run",
+    "JUnit.AuthControllerTest.loginWithInvalidPassword_shouldFail.executor": "Run",
+    "JUnit.RegisterRequestTest.executor": "Run",
+    "JUnit.RegisterRequestTest.validRegisterRequest_shouldHaveNoViolation.executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.AtsSystemApplication.executor": "Run",
+    "git-widget-placeholder": "QA-testing",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="JUnit.AuthControllerTest.loginWithInvalidPassword_shouldFail">
+    <configuration name="AuthControllerTest.accessSecuredEndpoint_withoutToken_shouldReturn401" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ats-system" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ats.atssystem.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.ats.atssystem.controller" />
+      <option name="MAIN_CLASS_NAME" value="com.ats.atssystem.controller.AuthControllerTest" />
+      <option name="METHOD_NAME" value="accessSecuredEndpoint_withoutToken_shouldReturn401" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthControllerTest.accessSecuredEndpoint_withoutToken_shouldReturn403" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ats-system" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ats.atssystem.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.ats.atssystem.controller" />
+      <option name="MAIN_CLASS_NAME" value="com.ats.atssystem.controller.AuthControllerTest" />
+      <option name="METHOD_NAME" value="accessSecuredEndpoint_withoutToken_shouldReturn403" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthControllerTest.loginWithInvalidPassword_shouldFail" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ats-system" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ats.atssystem.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.ats.atssystem.controller" />
+      <option name="MAIN_CLASS_NAME" value="com.ats.atssystem.controller.AuthControllerTest" />
+      <option name="METHOD_NAME" value="loginWithInvalidPassword_shouldFail" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RegisterRequestTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ats-system" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ats.atssystem.dto.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.ats.atssystem.dto" />
+      <option name="MAIN_CLASS_NAME" value="com.ats.atssystem.dto.RegisterRequestTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RegisterRequestTest.validRegisterRequest_shouldHaveNoViolation" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ats-system" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ats.atssystem.dto.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.ats.atssystem.dto" />
+      <option name="MAIN_CLASS_NAME" value="com.ats.atssystem.dto.RegisterRequestTest" />
+      <option name="METHOD_NAME" value="validRegisterRequest_shouldHaveNoViolation" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AtsSystemApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="ats-system" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ats.atssystem.AtsSystemApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.AuthControllerTest.loginWithInvalidPassword_shouldFail" />
+        <item itemvalue="JUnit.RegisterRequestTest.validRegisterRequest_shouldHaveNoViolation" />
+        <item itemvalue="JUnit.RegisterRequestTest" />
+        <item itemvalue="JUnit.AuthControllerTest.accessSecuredEndpoint_withoutToken_shouldReturn403" />
+        <item itemvalue="JUnit.AuthControllerTest.accessSecuredEndpoint_withoutToken_shouldReturn401" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.26053.27" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.26053.27" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c69427e0-e91d-45b4-960a-cb4e4e608189" name="Changes" comment="" />
+      <created>1770109492951</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1770109492951</updated>
+      <workItem from="1770109494598" duration="10364000" />
+      <workItem from="1770135118295" duration="1735000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-field">
+          <url>file://$PROJECT_DIR$/ats-system/src/main/java/com/ats/atssystem/service/AuthService.java</url>
+          <line>26</line>
+          <properties field="LOCKOUT_DURATION" class="com.ats.atssystem.service.AuthService" />
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

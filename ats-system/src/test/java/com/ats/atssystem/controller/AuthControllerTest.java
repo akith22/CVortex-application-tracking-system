@@ -99,5 +99,6 @@ class AuthControllerTest {
         // Perform GET /candidate/profile without Authorization header
         mockMvc.perform(get("/candidate/profile"))
                 .andExpect(status().isForbidden()); // Expect 403 Unauthorized
+
     }
 }
