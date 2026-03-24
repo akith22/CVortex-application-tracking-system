@@ -572,11 +572,12 @@ const styles = {
     display: "flex",
     alignItems: "center",
     gap: "1rem",
+    flexWrap: "wrap",
   },
 
   clockCard: {
     background: "#fff",
-    padding: "0.75rem 1.25rem",
+    padding: "1rem 1.5rem",
     borderRadius: "12px",
     boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
     display: "flex",
@@ -586,20 +587,20 @@ const styles = {
   },
 
   clockIcon: {
-    fontSize: "24px",
+    fontSize: "32px",
   },
 
   clockTime: {
     margin: 0,
-    fontSize: "18px",
+    fontSize: "20px",
     fontWeight: 700,
     color: "#1f2937",
     fontFamily: "monospace",
   },
 
   clockDate: {
-    margin: "2px 0 0 0",
-    fontSize: "11px",
+    margin: "4px 0 0 0",
+    fontSize: "12px",
     color: "#6b7280",
     fontWeight: 500,
   },
@@ -626,57 +627,6 @@ const styles = {
   alertMessage: {
     margin: 0,
     fontSize: "14px",
-  },
-
-  /* ===== HEADER WITH CLOCK ===== */
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: "2rem",
-    flexWrap: "wrap",
-    gap: "1rem",
-  },
-
-  subtitle: {
-    color: "#6b7280",
-    marginTop: "0.5rem",
-  },
-
-  headerRight: {
-    display: "flex",
-    alignItems: "center",
-    gap: "1rem",
-    flexWrap: "wrap",
-  },
-
-  clockCard: {
-    background: "#fff",
-    padding: "1rem 1.5rem",
-    borderRadius: "12px",
-    boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-    display: "flex",
-    alignItems: "center",
-    gap: "1rem",
-  },
-
-  clockIcon: {
-    fontSize: "32px",
-  },
-
-  clockTime: {
-    margin: 0,
-    fontSize: "20px",
-    fontWeight: 700,
-    color: "#1f2937",
-    fontFamily: "monospace",
-  },
-
-  clockDate: {
-    margin: "4px 0 0 0",
-    fontSize: "12px",
-    color: "#6b7280",
-    fontWeight: 500,
   },
 
   /* ===== STATS GRID ===== */
