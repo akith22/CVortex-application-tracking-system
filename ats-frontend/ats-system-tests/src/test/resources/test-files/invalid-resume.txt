@@ -1,0 +1,2 @@
+This is not a PDF file.
+It is used to validate unsupported resume uploads.
