@@ -1,0 +1,20 @@
+[
+  {
+    "name": "System Admin",
+    "email": "admin@cvortex.test",
+    "password": "Admin@123",
+    "role": "ADMIN"
+  },
+  {
+    "name": "Recruiter One",
+    "email": "recruiter@cvortex.test",
+    "password": "Recruiter@123",
+    "role": "RECRUITER"
+  },
+  {
+    "name": "Candidate One",
+    "email": "candidate@cvortex.test",
+    "password": "Candidate@123",
+    "role": "CANDIDATE"
+  }
+]

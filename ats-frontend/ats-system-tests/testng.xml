@@ -1,0 +1,64 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="CVortex ATS Complete System Suite" parallel="false" verbose="1">
+    <listeners>
+        <listener class-name="com.cvortex.ats.listeners.TestListener"/>
+        <listener class-name="com.cvortex.ats.retry.RetryTransformer"/>
+    </listeners>
+
+    <test name="Authentication and Access">
+        <groups>
+            <run>
+                <include name="auth"/>
+                <include name="access"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.cvortex.ats.tests.auth.RegisterLoginFlowTests"/>
+            <class name="com.cvortex.ats.tests.auth.AuthenticationTests"/>
+        </classes>
+    </test>
+
+    <test name="Candidate Module">
+        <groups>
+            <run>
+                <include name="candidate"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.cvortex.ats.tests.candidate.CandidateModuleTests"/>
+        </classes>
+    </test>
+
+    <test name="Recruiter Module">
+        <groups>
+            <run>
+                <include name="recruiter"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.cvortex.ats.tests.recruiter.RecruiterModuleTests"/>
+        </classes>
+    </test>
+
+    <test name="Admin Module">
+        <groups>
+            <run>
+                <include name="admin"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.cvortex.ats.tests.admin.AdminModuleTests"/>
+        </classes>
+    </test>
+
+    <test name="End to End">
+        <groups>
+            <run>
+                <include name="e2e"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.cvortex.ats.tests.e2e.EndToEndWorkflowTests"/>
+        </classes>
+    </test>
+</suite>
